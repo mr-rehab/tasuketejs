@@ -6,3 +6,4 @@ coverage/
 apps/docs/src/.vitepress/cache/
 apps/docs/src/api/
 apps/docs/sidebar.json
+release/

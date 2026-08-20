@@ -1,7 +1,7 @@
 {
   "name": "@tasuketejs/core",
   "version": "0.1.0",
-  "description": "Local voice AI accessibility SDK — 100% client-side, framework-agnostic intent-driven voice control.",
+  "description": "Voice control SDK for web and mobile apps. Runs in your app, no network calls.",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
