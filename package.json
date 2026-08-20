@@ -8,6 +8,10 @@
     "typecheck": "pnpm -r run typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "docs:api": "pnpm --filter @tasuketejs/docs api",
+    "docs:dev": "pnpm --filter @tasuketejs/docs dev",
+    "docs:build": "pnpm --filter @tasuketejs/docs build",
+    "docs:preview": "pnpm --filter @tasuketejs/docs preview",
     "prepare": "simple-git-hooks"
   },
   "simple-git-hooks": {

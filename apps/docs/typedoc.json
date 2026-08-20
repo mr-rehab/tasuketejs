@@ -1,0 +1,11 @@
+{
+  "$schema": "https://typedoc.io/schema.json",
+  "entryPoints": ["../../packages/core/src/index.ts"],
+  "tsconfig": "../../packages/core/tsconfig.json",
+  "out": "src/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "useCodeBlocks": true,
+  "navigationJson": "sidebar.json"
+}

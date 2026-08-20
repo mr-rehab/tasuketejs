@@ -3,3 +3,6 @@ dist/
 coverage/
 *.tsbuildinfo
 .DS_Store
+apps/docs/src/.vitepress/cache/
+apps/docs/src/api/
+apps/docs/sidebar.json

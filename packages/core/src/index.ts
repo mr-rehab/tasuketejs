@@ -63,6 +63,9 @@ export {
   WebSpeechTranscriptSource,
   getSpeechRecognitionCtor,
   type WebSpeechTranscriptSourceOptions,
+  type SpeechRecognitionCtor,
+  type SpeechRecognitionLike,
+  type SpeechRecognitionResultEventLike,
 } from './stt/web-speech.js';
 export {
   OfflineTranscriptSource,

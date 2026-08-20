@@ -1,6 +1,6 @@
 import type { TranscriptSource, TranscriptSourceCallbacks } from './types.js';
 
-interface SpeechRecognitionLike {
+export interface SpeechRecognitionLike {
   continuous: boolean;
   interimResults: boolean;
   lang: string;
@@ -11,12 +11,12 @@ interface SpeechRecognitionLike {
   onend: (() => void) | null;
 }
 
-interface SpeechRecognitionResultEventLike {
+export interface SpeechRecognitionResultEventLike {
   resultIndex: number;
   results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }>;
 }
 
-type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
+export type SpeechRecognitionCtor = new () => SpeechRecognitionLike;
 
 export interface WebSpeechTranscriptSourceOptions {
   lang?: string;
