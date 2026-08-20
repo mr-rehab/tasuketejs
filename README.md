@@ -75,3 +75,15 @@ pnpm build       # ESM + CJS + .d.ts for every package
 ```
 
 Pre-commit runs lint-staged with the same strict ESLint configuration on every change.
+
+### SonarQube audit
+
+A local SonarQube static audit is wired up via Docker:
+
+```bash
+./scripts/sonar-audit.sh --server   # first run: start SonarQube, log in, create a token
+export SONAR_TOKEN=<token>
+./scripts/sonar-audit.sh            # boots SonarQube, runs tests with coverage, scans
+```
+
+The dashboard lands at `http://localhost:9000/dashboard?id=tasuketejs`. Configuration lives in `sonar-project.properties`; `sonarjs` lint rules also run on every commit in the meantime.

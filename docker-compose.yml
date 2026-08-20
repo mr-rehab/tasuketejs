@@ -1,0 +1,29 @@
+services:
+  sonarqube:
+    image: sonarqube:26.8.0-community
+    container_name: tasuketejs-sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+  scanner:
+    image: sonarsource/sonar-scanner-cli
+    profiles: ["scan"]
+    depends_on:
+      - sonarqube
+    working_dir: /usr/src
+    volumes:
+      - .:/usr/src
+    environment:
+      - SONAR_HOST_URL=http://sonarqube:9000
+      - SONAR_TOKEN=${SONAR_TOKEN:?Set SONAR_TOKEN first — see scripts/sonar-audit.sh}
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
