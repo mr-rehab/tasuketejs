@@ -48,7 +48,9 @@ Unclear speech never guesses — the user hears a clarification question and a `
 
 ## Documentation
 
-The full documentation lives in [`apps/docs`](apps/docs) and covers actions, context snapshots, transcript sources (including the guaranteed-offline pipeline), intent engines, events, and privacy:
+Read the docs at **https://mr-rehab.github.io/tasuketejs/** — actions, context snapshots, transcript sources (including the guaranteed-offline pipeline), intent engines, events, and privacy.
+
+The source lives in [`apps/docs`](apps/docs); every push to `main` rebuilds and deploys the site via GitHub Actions:
 
 ```bash
 pnpm docs:dev    # local docs site

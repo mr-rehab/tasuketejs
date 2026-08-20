@@ -29,6 +29,7 @@ function apiSidebar(): DefaultTheme.SidebarItem[] {
 export default defineConfig({
   title: 'TasuketeJS',
   description: 'Intent-driven, 100% client-side voice accessibility SDK for PWAs and mobile apps.',
+  base: '/tasuketejs/',
   appearance: 'dark',
   lastUpdated: true,
   head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }]],
