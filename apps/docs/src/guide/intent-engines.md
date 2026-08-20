@@ -11,12 +11,12 @@ type IntentResult =
 
 ## HeuristicIntentEngine (default)
 
-Deterministic, zero-dependency, instant. It scores each registered action against the spoken words:
+No dependencies. It scores each registered action against the spoken words:
 
 - name tokens (`move_file` → `move`, `file`) carry the most weight, including partial matches on longer words
 - every word matched in the action `description` adds a little more
 - spoken parameter names add further signal
-- near-tied top candidates halve the confidence — ambiguity is surfaced, not guessed
+- when top candidates are nearly tied, confidence is halved, so ambiguity is surfaced rather than guessed
 
 ```ts
 import { HeuristicIntentEngine, TasuketeEngine } from '@tasuketejs/core';

@@ -1,6 +1,6 @@
 # Actions
 
-Actions are the entire integration surface. An action is a named, Zod-typed operation with a handler; the voice pipeline's only job is to pick the right action and fill its arguments.
+Actions are the entire integration surface. An action has a name, a Zod schema, and a handler. The pipeline picks the action and fills its arguments.
 
 ## Definition
 

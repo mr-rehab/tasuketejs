@@ -1,6 +1,6 @@
 # Transcript Sources
 
-A transcript source turns microphone audio into text and pushes utterances into the engine. TasuketeJS ships two — one zero-dependency, one guaranteed-offline — and the `TranscriptSource` interface is three methods, so custom sources are trivial.
+A transcript source turns microphone audio into text and pushes utterances into the engine. TasuketeJS ships two sources: one with no dependencies, one that works offline. The `TranscriptSource` interface has three methods, so custom sources are easy to write.
 
 ```ts
 interface TranscriptSource {
@@ -31,12 +31,12 @@ const source = new WebSpeechTranscriptSource({ lang: 'en-US' });
 - Mic permission denial surfaces as an `error` event with code `mic-denied`.
 
 ::: warning Privacy caveat
-On some browsers — notably Chrome — `SpeechRecognition` audio may be processed by a **cloud service**. If your product promises on-device processing, use `OfflineTranscriptSource` below.
+In Chrome, `SpeechRecognition` audio may be processed by a **cloud service**. If your product must keep audio on the device, use `OfflineTranscriptSource` below.
 :::
 
 ## OfflineTranscriptSource
 
-The guaranteed-local pipeline: mic frames → on-device VAD segmentation → your local `SttEngine`. Nothing leaves the device, ever.
+The fully local pipeline: mic frames → VAD segmentation → your local `SttEngine`. Nothing leaves the device.
 
 ```ts
 import { MicSource, OfflineTranscriptSource } from '@tasuketejs/core';
@@ -58,11 +58,11 @@ The pieces, all exported and reusable on their own:
 | `SpeechSegmenter` / `rms` | Energy-based VAD that buffers frames into complete speech segments (pre-roll, hangover, max-duration flush). |
 | `SttEngine` | The plug point: `transcribe(segment: Float32Array, sampleRate: number) => Promise<string>`. Wrap any local WASM model — Whisper.cpp compiled to WASM is the reference choice. |
 
-This is also the path for React Native: provide a `FrameSource` backed by your native audio capture and an `SttEngine` backed by an on-device model; everything else stays identical.
+This is also the path for React Native: provide a `FrameSource` backed by your native audio capture and an `SttEngine` backed by a local model; everything else stays identical.
 
 ## Text-only integrations
 
-You can skip audio entirely and drive the same intent pipeline from a text box — useful for accessibility testing and silent environments. Construct the engine with any source (it never needs to start) and feed text directly:
+You can skip audio entirely and drive the same intent pipeline from a text box, useful for accessibility testing and silent environments. Construct the engine with any source (it never needs to start) and feed text directly:
 
 ```ts
 const engine = new TasuketeEngine({
@@ -75,4 +75,4 @@ inputForm.addEventListener('submit', () => {
 });
 ```
 
-`processUtterance` enqueues text exactly as if it had been spoken — transcript event, intent parse, gate, dispatch, feedback.
+`processUtterance` enqueues text exactly as if it had been spoken: transcript event, intent parse, gate, dispatch, feedback.

@@ -28,7 +28,7 @@ function apiSidebar(): DefaultTheme.SidebarItem[] {
 
 export default defineConfig({
   title: 'TasuketeJS',
-  description: 'Intent-driven, 100% client-side voice accessibility SDK for PWAs and mobile apps.',
+  description: 'A voice control SDK for web and mobile apps. Runs in your app, no network calls.',
   base: '/tasuketejs/',
   appearance: 'dark',
   lastUpdated: true,
@@ -60,7 +60,7 @@ export default defineConfig({
     search: { provider: 'local' },
     outline: { level: [2, 3] },
     footer: {
-      message: 'Voice accessibility that stays on-device.',
+      message: 'No network calls. No telemetry.',
       copyright: 'Copyright © 2026 TasuketeJS contributors',
     },
   },

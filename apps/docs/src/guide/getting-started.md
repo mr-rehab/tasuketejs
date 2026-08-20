@@ -1,6 +1,6 @@
 # Getting Started
 
-TasuketeJS is an intent-driven voice accessibility layer. Instead of scraping the UI, your app registers **actions** — named, typed operations with a Zod schema. Speech is transcribed, matched to an action, validated, and executed. The result is spoken back to the user.
+TasuketeJS turns speech into typed handler calls. Your app registers **actions**: named operations with a Zod schema. Speech is transcribed, matched to an action, validated, and executed. The result is spoken back to the user. The SDK never reads your UI tree.
 
 ```
 mic → transcript source → intent engine → confidence gate → your action handler → spoken feedback
@@ -31,7 +31,7 @@ const engine = new TasuketeEngine({
     selectedFiles: ['invoice.pdf', 'photo.jpg'],
   }),
   transcriptSource: new WebSpeechTranscriptSource({ lang: 'en-US' }),
-  // intentEngine defaults to HeuristicIntentEngine — zero binaries, zero network.
+  // intentEngine defaults to HeuristicIntentEngine: no binaries, no network.
 });
 
 engine.registerAction({
@@ -56,12 +56,12 @@ await engine.start(); // resolves after mic access is granted
 Say *"delete file invoice dot p d f"* and the handler runs, the result is announced via speech synthesis, and an `action` event fires.
 
 ::: warning
-`WebSpeechTranscriptSource` relies on the browser-native `SpeechRecognition` API. In Chrome, recognition audio may be processed by a cloud service. For a guaranteed-offline pipeline, see [Transcript Sources](/guide/transcript-sources) and [Privacy](/guide/privacy).
+`WebSpeechTranscriptSource` relies on the browser-native `SpeechRecognition` API. In Chrome, recognition audio may be processed by a cloud service. For a pipeline that works offline, see [Transcript Sources](/guide/transcript-sources) and [Privacy](/guide/privacy).
 :::
 
 ## What happens on unclear speech
 
-The engine never guesses. If confidence is below the threshold (default `0.6`), or required arguments are missing, the user hears a clarification question instead — for example:
+The engine never guesses. If confidence is below the threshold (default `0.6`), or required arguments are missing, the user hears a clarification question, for example:
 
 > I understood "delete_file", but I'm missing a value for "name".
 
@@ -69,8 +69,8 @@ Tune the threshold with `confidenceThreshold`, or handle the `clarify` event to 
 
 ## Going further
 
-- [Actions](/guide/actions) — naming, schemas, and the handler contract
-- [Context Snapshots](/guide/context) — what the intent engine is allowed to see
-- [Transcript Sources](/guide/transcript-sources) — WebSpeech vs. the guaranteed-offline pipeline
-- [Intent Engines](/guide/intent-engines) — heuristic fallback and the Needle 2 edge model
-- [Events](/guide/events) — the full typed event bus
+- [Actions](/guide/actions): naming, schemas, and the handler contract
+- [Context Snapshots](/guide/context): what the intent engine is allowed to see
+- [Transcript Sources](/guide/transcript-sources): WebSpeech and the offline pipeline
+- [Intent Engines](/guide/intent-engines): heuristic fallback and the Needle 2 model
+- [Events](/guide/events): the full typed event bus

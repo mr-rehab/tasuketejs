@@ -1,20 +1,20 @@
 # TasuketeJS
 
-Intent-driven, 100% client-side voice accessibility for PWAs and mobile apps.
+Voice control for web and mobile apps, written in plain TypeScript.
 
-Users speak. TasuketeJS transcribes, matches the utterance to one of your registered **actions**, validates the arguments with [Zod](https://zod.dev), and speaks the result back. It never scrapes your UI tree — your app exposes typed actions, the voice layer does the rest.
+Users speak. TasuketeJS transcribes, matches the utterance to one of your registered **actions**, validates the arguments with [Zod](https://zod.dev), and speaks the result back. It does not read your UI tree. Your app exposes typed actions; the voice layer does the rest.
 
 ```
 mic → transcript source → intent engine → confidence gate → your handler → spoken feedback
 ```
 
-## Why TasuketeJS
+## Design
 
-- **Intent-driven, not UI-driven** — actions are declared, typed, and validated. No fragile DOM heuristics.
-- **100% client-side** — no SDK-mandated network calls, no telemetry. A guaranteed-offline pipeline is built in.
-- **Framework-agnostic** — plain TypeScript; use it from React, Vue, Svelte, Solid, or React Native.
-- **Safe by default** — a confidence gate suppresses uncertain speech into clarification questions instead of running the wrong action.
-- **Tiny footprint** — the default engine is deterministic and dependency-free; the optional edge-SLM path runs inside an enforced 28MB RAM budget.
+- Actions are declared with a Zod schema. No DOM inspection.
+- Everything runs in your app. No network calls, no telemetry. An offline pipeline is included.
+- No framework dependency. Works with React, Vue, Svelte, Solid, and React Native.
+- Speech below the confidence threshold produces a clarification question instead of running the wrong action.
+- The default intent engine is deterministic with no dependencies. The optional SLM path is capped at 28MB RAM, enforced in code.
 
 ## Install
 
@@ -44,13 +44,13 @@ engine.on('action', ({ name, args }) => console.log('ran', name, args));
 await engine.start();
 ```
 
-Unclear speech never guesses — the user hears a clarification question and a `clarify` event fires.
+Unclear speech produces a clarification question and a `clarify` event instead of a guessed action.
 
 ## Documentation
 
-Read the docs at **https://mr-rehab.github.io/tasuketejs/** — actions, context snapshots, transcript sources (including the guaranteed-offline pipeline), intent engines, events, and privacy.
+Docs: **https://mr-rehab.github.io/tasuketejs/**. Covers actions, context snapshots, transcript sources (including the offline pipeline), intent engines, events, and privacy.
 
-The source lives in [`apps/docs`](apps/docs); every push to `main` rebuilds and deploys the site via GitHub Actions:
+Source is in [`apps/docs`](apps/docs). A GitHub Actions workflow builds and deploys the site on every push to `main`:
 
 ```bash
 pnpm docs:dev    # local docs site
