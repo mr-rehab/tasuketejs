@@ -18,7 +18,7 @@
     "pre-commit": "pnpm exec lint-staged"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --fix --max-warnings=0"
+    "*.{ts,tsx}": "eslint --fix --max-warnings=0 --no-warn-ignored"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
