@@ -8,8 +8,10 @@ export interface Needle2RunOutput {
   raw?: string;
 }
 
+/** The contract a Needle 2 binary asset must satisfy. */
 export interface Needle2Module {
   run(input: { text: string; context: unknown; tools: unknown[] }): Promise<Needle2RunOutput>;
+  /** Current resident size in bytes, if the asset can report it — used for budget enforcement. */
   memoryBytes?(): number | undefined;
   dispose?(): void;
 }
@@ -17,14 +19,23 @@ export interface Needle2Module {
 export type Needle2Factory = (config: { tools: unknown[] }) => Needle2Module | Promise<Needle2Module>;
 
 export interface Needle2EngineOptions {
+  /** Factory exporting/creating the engine module; alternative to `url`. */
   module?: Needle2Factory;
+  /** URL of an asset module exporting `createNeedle2(config)`. */
   url?: string;
+  /** Hard RAM ceiling in bytes; exceeding it disposes the module. Default 28MB. */
   ramBudgetBytes?: number;
   onError?: (message: string) => void;
 }
 
 const DEFAULT_RAM_BUDGET = 28 * 1024 * 1024;
 
+/**
+ * Adapter for the external "Needle 2" edge SLM (~45M params, ~14MB quantized).
+ * The binary is never bundled — provide it via `module` or `url`. The RAM
+ * budget is enforced on load and after every parse: an over-budget session is
+ * disposed immediately and reported through `onError`.
+ */
 export class Needle2Engine implements IntentEngine {
   private mod: Needle2Module | null = null;
   private tools: ToolSpec[] = [];

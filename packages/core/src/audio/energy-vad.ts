@@ -1,3 +1,4 @@
+/** Tuning knobs for {@link SpeechSegmenter}; all defaults suit 32ms frames at 16kHz. */
 export interface VadOptions {
   startThreshold?: number;
   endThreshold?: number;
@@ -14,6 +15,7 @@ interface ResolvedVadOptions {
   maxSegmentFrames: number;
 }
 
+/** Root-mean-square energy of a PCM frame — the simplest usable voice-activity signal. */
 export function rms(frame: Float32Array): number {
   let sum = 0;
   for (const sample of frame) sum += sample * sample;

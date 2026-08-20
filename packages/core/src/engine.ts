@@ -9,11 +9,17 @@ import { ActionRegistry, type ActionDefinition } from './registry.js';
 import type { TranscriptSource } from './stt/types.js';
 
 export interface TasuketeEngineOptions {
+  /** Called once per utterance; its return value is the app state the intent engine sees. */
   contextProvider: ContextProvider;
+  /** Turns microphone audio into text utterances. */
   transcriptSource: TranscriptSource;
+  /** Maps utterances to actions. Defaults to {@link HeuristicIntentEngine}. */
   intentEngine?: IntentEngine;
+  /** Execute intents below this confidence are suppressed into a clarify question. Default 0.6. */
   confidenceThreshold?: number;
+  /** Announces outcomes to the user. Defaults to {@link SpeechSynthesisFeedback}; `null` silences. */
   feedback?: FeedbackDispatcher | null;
+  /** Serialized-size cap for context snapshots, in bytes. Default 8192. */
   contextByteLimit?: number;
 }
 
@@ -22,7 +28,13 @@ interface QueueItem {
   resolve: () => void;
 }
 
+/**
+ * The voice pipeline orchestrator: transcript source in, validated action out.
+ * Utterances are processed serially — speech that arrives while a handler is
+ * running is queued, never dropped and never run concurrently.
+ */
 export class TasuketeEngine {
+  /** Typed event bus powering {@link TasuketeEngine.on}. */
   readonly events = new TasuketeEventBus();
 
   private readonly registry = new ActionRegistry();
@@ -44,10 +56,16 @@ export class TasuketeEngine {
     this.source = options.transcriptSource;
   }
 
+  /** Subscribes to a pipeline event; returns an unsubscribe function. Listener errors are contained. */
   on<K extends keyof TasuketeEventMap>(event: K, listener: (event: TasuketeEventMap[K]) => void): () => void {
     return this.events.on(event, listener);
   }
 
+  /**
+   * Registers a voice action and returns its unregister function.
+   * Throws (and emits an `error` event with code `registration`) on invalid
+   * names, duplicate names, or unsupported schemas.
+   */
   registerAction<TSchema extends z.ZodType>(def: ActionDefinition<TSchema>): () => void {
     try {
       return this.registry.register(def);
@@ -69,6 +87,7 @@ export class TasuketeEngine {
     return this.started;
   }
 
+  /** Loads the intent engine and starts listening. Rejects on mic denial or model-load failure (after emitting `error`). */
   async start(): Promise<void> {
     if (this.destroyed) throw new Error('Engine was destroyed — create a new instance.');
     if (this.started) return;
@@ -91,12 +110,14 @@ export class TasuketeEngine {
     this.started = true;
   }
 
+  /** Stops listening for speech. Queued utterances still drain. */
   async stop(): Promise<void> {
     if (!this.started) return;
     this.started = false;
     await this.source.stop();
   }
 
+  /** Stops listening, disposes the intent engine, and removes all listeners. The instance cannot be restarted. */
   async destroy(): Promise<void> {
     await this.stop();
     await this.intentEngine.dispose?.();
@@ -104,6 +125,7 @@ export class TasuketeEngine {
     this.destroyed = true;
   }
 
+  /** Feeds text through the pipeline as if it had been spoken. Resolves once the utterance has fully processed. */
   async processUtterance(text: string): Promise<void> {
     await this.enqueue(text);
   }

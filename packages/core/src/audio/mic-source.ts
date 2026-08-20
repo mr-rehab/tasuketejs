@@ -1,10 +1,12 @@
 import { FRAME_WORKLET_SRC, TASUKETE_FRAMER_NAME } from './worklet.js';
 
+/** Any source of fixed-size PCM frames — `MicSource` on the web, or a native bridge on React Native. */
 export interface FrameSource {
   start(onFrame: (frame: Float32Array) => void): Promise<void>;
   stop(): Promise<void>;
 }
 
+/** Thrown when the user refuses microphone permission. */
 export class MicPermissionError extends Error {
   constructor(detail?: string) {
     super(`Microphone permission denied${detail ? ': ' + detail : '.'}`);
@@ -13,10 +15,13 @@ export class MicPermissionError extends Error {
 }
 
 export interface MicSourceOptions {
+  /** Samples per emitted frame. Default 512 (32ms at 16kHz). */
   frameSamples?: number;
+  /** Capture rate. Default 16000 — the rate local STT models expect. */
   sampleRate?: number;
 }
 
+/** `getUserMedia` → `AudioWorklet` framer producing mono Float32 PCM frames in-page. */
 export class MicSource implements FrameSource {
   private ctx: AudioContext | null = null;
   private stream: MediaStream | null = null;

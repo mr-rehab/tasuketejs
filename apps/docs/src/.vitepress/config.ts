@@ -59,7 +59,7 @@ export default defineConfig({
     search: { provider: 'local' },
     outline: { level: [2, 3] },
     footer: {
-      message: 'Released under the MIT License.',
+      message: 'Voice accessibility that stays on-device.',
       copyright: 'Copyright © 2026 TasuketeJS contributors',
     },
   },

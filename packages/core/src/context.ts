@@ -1,8 +1,15 @@
+/** Deep-frozen, byte-capped view of app state handed to intent engines and handlers. */
 export type ContextSnapshot = Readonly<Record<string, unknown>>;
+/** Returns the app state for the current utterance. Keep it small, serializable, and speakable. */
 export type ContextProvider = () => Record<string, unknown> | undefined | null;
 
 const DEFAULT_BYTE_LIMIT = 8192;
 
+/**
+ * Captures context snapshots with hard guarantees: provider errors become
+ * `{ __providerError }`, non-serializable values become `{ __contextError }`,
+ * and oversized snapshots drop their largest keys (listed in `__truncated`).
+ */
 export class ContextStore {
   private last: ContextSnapshot | null = null;
 

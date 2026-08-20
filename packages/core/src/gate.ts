@@ -5,6 +5,11 @@ export type GateOutcome =
   | { kind: 'execute'; action: string; args: unknown; confidence: number }
   | { kind: 'clarify'; reason: string; confidence: number };
 
+/**
+ * The safety layer between intent recognition and execution: unknown intents,
+ * low confidence, unregistered actions, and schema-invalid arguments all become
+ * clarify outcomes — the engine never executes an action it is not sure about.
+ */
 export class ConfidenceGate {
   constructor(private readonly threshold = 0.6) {}
 

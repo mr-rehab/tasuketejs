@@ -2,13 +2,22 @@ import type { z } from 'zod';
 import { compileGrammar, type GrammarConstraint } from './grammar.js';
 import type { ContextSnapshot } from './context.js';
 
+/** A voice action: name and description are voice hints, the schema types the arguments, the handler does the work. */
 export interface ActionDefinition<TSchema extends z.ZodType = z.ZodType> {
+  /** snake_case, 3–64 chars (`^[a-z][a-z0-9_]{2,63}$`); each `_`-separated token is matched against spoken words. */
   name: string;
+  /** Short, verb-first explanation — also used for voice matching, so make it descriptive. */
   description: string;
+  /** Zod schema (object at the top level) describing the action's arguments. */
   schema: TSchema;
+  /**
+   * Runs with validated, typed args and the frozen context snapshot.
+   * Must return a non-empty announcement string (spoken to the user).
+   */
   handler: (args: z.output<TSchema>, context: ContextSnapshot) => string | Promise<string>;
 }
 
+/** The wire format handed to intent engines: an action plus its compiled grammar. */
 export interface ToolSpec {
   name: string;
   description: string;
@@ -17,6 +26,7 @@ export interface ToolSpec {
 
 const ACTION_NAME_RE = /^[a-z][a-z0-9_]{2,63}$/;
 
+/** Thrown by dispatch when arguments fail the action's Zod schema. */
 export class ArgsValidationError extends Error {
   constructor(
     readonly action: string,
@@ -32,6 +42,7 @@ interface RegistryEntry {
   tool: ToolSpec;
 }
 
+/** Holds registered actions, compiles their schemas to grammar, and validates before dispatch. */
 export class ActionRegistry {
   private readonly actions = new Map<string, RegistryEntry>();
 

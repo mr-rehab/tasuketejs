@@ -29,10 +29,15 @@ export interface TasuketeErrorEvent {
   detail?: string;
 }
 
+/** Every pipeline event; keys of this map are the names accepted by `engine.on`. */
 export interface TasuketeEventMap {
+  /** A finalized utterance entered the pipeline. */
   transcript: TranscriptEvent;
+  /** An action handler completed successfully. */
   action: ActionEvent;
+  /** The engine is asking the user a question instead of executing. */
   clarify: ClarifyEvent;
+  /** A failure anywhere in the pipeline. */
   error: TasuketeErrorEvent;
 }
 
@@ -42,6 +47,7 @@ export type TasuketeEventName = keyof TasuketeEventMap;
 // event listener, which keeps the bus fully typed without per-event storage.
 type AnyListener = (event: never) => void;
 
+/** Minimal typed pub/sub; listener exceptions are swallowed so UI code can never stall the voice pipeline. */
 export class TasuketeEventBus {
   private readonly listeners = new Map<string, Set<AnyListener>>();
 

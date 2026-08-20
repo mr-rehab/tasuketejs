@@ -10,6 +10,7 @@ export type GrammarConstraint =
   | { type: 'optional'; inner: GrammarConstraint }
   | { type: 'null' };
 
+/** Thrown when a Zod schema uses a construct the compiler cannot represent to intent engines. */
 export class UnsupportedGrammarError extends Error {
   constructor(readonly typeName: string) {
     super(`Unsupported Zod schema for grammar compilation: ${typeName}`);
@@ -17,6 +18,13 @@ export class UnsupportedGrammarError extends Error {
   }
 }
 
+/**
+ * Compiles a Zod schema into a compact {@link GrammarConstraint} tree describing
+ * the action's parameters to intent engines. Supported: objects, strings,
+ * numbers, booleans, enums/literals, arrays with length checks, unions,
+ * optional/default/nullable. Refinements are intentionally not compiled —
+ * they are enforced by schema validation at dispatch time.
+ */
 export function compileGrammar(schema: z.ZodType): GrammarConstraint {
   return walk(schema as z.ZodTypeAny);
 }
