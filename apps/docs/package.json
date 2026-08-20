@@ -6,7 +6,8 @@
     "api": "typedoc && mv src/api/README.md src/api/index.md",
     "dev": "vitepress dev src",
     "build": "pnpm run api && vitepress build src",
-    "preview": "vitepress preview src"
+    "preview": "vitepress preview src",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",

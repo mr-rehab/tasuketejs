@@ -3,5 +3,5 @@ import type { Theme } from 'vitepress';
 import './custom.css';
 
 export default {
-  extend: DefaultTheme,
+  extends: DefaultTheme,
 } satisfies Theme;
